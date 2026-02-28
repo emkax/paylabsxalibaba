@@ -1,0 +1,51 @@
+ProductID,ProductName,Category,Price
+1,Classic Cheeseburger,Burger,45000
+2,Spicy Chicken Burger,Burger,52000
+3,Double Beef Burger,Burger,58000
+4,Grilled Chicken Wrap,Wrap,37000
+5,Beef Kebab,Wrap,40000
+6,Margherita Pizza,Pizza,78000
+7,Pepperoni Pizza,Pizza,95000
+8,BBQ Chicken Pizza,Pizza,87000
+9,Seafood Pizza,Pizza,102000
+10,Carbonara Pasta,Pasta,65000
+11,Bolognese Pasta,Pasta,72000
+12,Aglio Olio Pasta,Pasta,58000
+13,Fried Rice Special,Rice,42000
+14,Chicken Fried Rice,Rice,36000
+15,Seafood Fried Rice,Rice,48000
+16,Beef Teriyaki Rice,Rice,50000
+17,Chicken Katsu Rice,Rice,45000
+18,French Fries,Snack,20000
+19,Crispy Onion Rings,Snack,18000
+20,Chicken Nuggets,Snack,25000
+21,Chicken Wings BBQ,Snack,27000
+22,Chicken Wings Spicy,Snack,23000
+23,Hot Dog Classic,Hotdog,30000
+24,Cheesy Hot Dog,Hotdog,35000
+25,Club Sandwich,Sandwich,42000
+26,Tuna Sandwich,Sandwich,38000
+27,Chocolate Milkshake,Beverage,28000
+28,Vanilla Milkshake,Beverage,26000
+29,Strawberry Milkshake,Beverage,30000
+30,Iced Americano,Beverage,20000
+31,Cappuccino,Beverage,32000
+32,Latte,Beverage,34000
+33,Mocha,Beverage,33000
+34,Thai Iced Tea,Beverage,25000
+35,Lemon Tea,Beverage,18000
+36,Green Tea Latte,Beverage,31000
+37,Mango Smoothie,Beverage,30000
+38,Avocado Smoothie,Beverage,33000
+39,Chocolate Brownie,Dessert,40000
+40,Cheesecake Slice,Dessert,45000
+41,Tiramisu Cake,Dessert,50000
+42,Red Velvet Cake,Dessert,48000
+43,Ice Cream Vanilla,Dessert,20000
+44,Ice Cream Chocolate,Dessert,22000
+45,Ice Cream Strawberry,Dessert,21000
+46,Chicken Caesar Salad,Salad,40000
+47,Greek Salad,Salad,38000
+48,Beef Steak,Main Course,120000
+49,Grilled Salmon,Main Course,130000
+50,Fish and Chips,Main Course,125000

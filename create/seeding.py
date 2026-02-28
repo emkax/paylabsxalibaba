@@ -181,4 +181,4 @@ def run_seeding(
 
 
 if __name__ == "__main__":
-    run_seeding(n=50)
+    run_seeding(n=300)
