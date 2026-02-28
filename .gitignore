@@ -4,3 +4,15 @@ public_key.pem
 
 # Ignore environment configuration file
 .env
+
+# Ignore node_modules
+node_modules/
+
+# Ignore build outputs
+dist/
+build/
+.next/
+
+# Ignore IDE settings
+.vscode/
+.idea/
