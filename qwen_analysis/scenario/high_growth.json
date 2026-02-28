@@ -1,0 +1,48 @@
+{
+  "merchant_profile": {
+    "merchant_id": "FNB002",
+    "business_name": "Smash & Slice Hub",
+    "category": "F&B",
+    "sub_category": "Quick Service Restaurant",
+    "location_city": "Bandung",
+    "business_age_months": 14,
+    "avg_price_range": "20k-95k",
+    "operational_hours": "09:00-23:00",
+    "online_offline_type": "Offline + Delivery + Cloud Kitchen",
+    "employee_count": 11
+  },
+  "performance_metrics": {
+    "current_month_revenue": 720000000,
+    "revenue_change_30d_percent": 21.6,
+    "revenue_volatility_score": 0.41,
+    "cashflow_stress_index": 0.19,
+    "avg_ticket_size": 82000,
+    "ticket_size_change_percent": 7.8,
+    "transaction_frequency_change_percent": 15.2,
+    "negative_cashflow_streak_days": 0,
+    "customer_repeat_ratio": 0.52,
+    "peak_hour_distribution": {
+      "morning": 18,
+      "afternoon": 42,
+      "evening": 40
+    }
+  },
+  "peer_comparison": {
+    "peer_group_size": 204,
+    "peer_avg_growth_rate": 6.2,
+    "peer_avg_ticket_size": 73000,
+    "peer_avg_volatility": 0.44,
+    "peer_percentile_rank": 91,
+    "peer_top_performing_strategies": [
+      "limited_time_menu",
+      "influencer_collaboration",
+      "premium_combo_upgrade",
+      "upsell_beverage_addon"
+    ],
+    "peer_common_failure_pattern": [
+      "supply_chain_delay",
+      "rapid_overexpansion",
+      "inconsistent_quality_control"
+    ]
+  }
+}

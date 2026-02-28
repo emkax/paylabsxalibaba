@@ -1,0 +1,48 @@
+{
+  "merchant_profile": {
+    "merchant_id": "FNB001",
+    "business_name": "Urban Bites Kitchen",
+    "category": "F&B",
+    "sub_category": "Casual Dining & Fast Casual",
+    "location_city": "Jakarta Selatan",
+    "business_age_months": 24,
+    "avg_price_range": "25k-100k",
+    "operational_hours": "10:00-22:00",
+    "online_offline_type": "Offline + Delivery",
+    "employee_count": 14
+  },
+  "performance_metrics": {
+    "current_month_revenue": 485000000,
+    "revenue_change_30d_percent": 2.8,
+    "revenue_volatility_score": 0.34,
+    "cashflow_stress_index": 0.28,
+    "avg_ticket_size": 74000,
+    "ticket_size_change_percent": 1.5,
+    "transaction_frequency_change_percent": 1.2,
+    "negative_cashflow_streak_days": 2,
+    "customer_repeat_ratio": 0.43,
+    "peak_hour_distribution": {
+      "morning": 12,
+      "afternoon": 38,
+      "evening": 50
+    }
+  },
+  "peer_comparison": {
+    "peer_group_size": 186,
+    "peer_avg_growth_rate": 3.5,
+    "peer_avg_ticket_size": 71000,
+    "peer_avg_volatility": 0.39,
+    "peer_percentile_rank": 58,
+    "peer_top_performing_strategies": [
+      "family_combo_bundle",
+      "weekend_live_music_event",
+      "loyalty_point_program",
+      "delivery_app_promotion"
+    ],
+    "peer_common_failure_pattern": [
+      "over_discounting",
+      "high_food_waste",
+      "low_repeat_customer_rate"
+    ]
+  }
+}

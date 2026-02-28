@@ -1,0 +1,7 @@
+query->requery
+
+feature extraction
+
+kesimpulan QWEN
+
+untuk MVP (buat semua data dummy preavailbael gausah real time)

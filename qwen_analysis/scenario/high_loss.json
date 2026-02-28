@@ -1,0 +1,49 @@
+{
+  "merchant_profile": {
+    "merchant_id": "FNB003",
+    "business_name": "City Grill Corner",
+    "category": "F&B",
+    "sub_category": "Casual Dining",
+    "location_city": "Surabaya",
+    "business_age_months": 30,
+    "avg_price_range": "30k-100k",
+    "operational_hours": "11:00-22:00",
+    "online_offline_type": "Offline Only",
+    "employee_count": 16
+  },
+  "performance_metrics": {
+    "current_month_revenue": 198000000,
+    "revenue_change_30d_percent": -27.4,
+    "revenue_volatility_score": 0.79,
+    "cashflow_stress_index": 0.71,
+    "avg_ticket_size": 61000,
+    "ticket_size_change_percent": -11.5,
+    "transaction_frequency_change_percent": -22.3,
+    "negative_cashflow_streak_days": 18,
+    "customer_repeat_ratio": 0.26,
+    "peak_hour_distribution": {
+      "morning": 8,
+      "afternoon": 35,
+      "evening": 57
+    }
+  },
+  "peer_comparison": {
+    "peer_group_size": 173,
+    "peer_avg_growth_rate": 4.1,
+    "peer_avg_ticket_size": 75000,
+    "peer_avg_volatility": 0.36,
+    "peer_percentile_rank": 14,
+    "peer_top_performing_strategies": [
+      "delivery_platform_expansion",
+      "cost_optimization_program",
+      "weekday_discount_campaign",
+      "menu_reengineering"
+    ],
+    "peer_common_failure_pattern": [
+      "high_fixed_rent_cost",
+      "overstaffing_non_peak_hour",
+      "no_online_presence",
+      "declining_food_quality_review"
+    ]
+  }
+}

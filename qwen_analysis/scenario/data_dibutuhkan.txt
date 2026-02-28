@@ -1,0 +1,32 @@
+A. Condition-Based (Business Profile)
+merchant_id
+business_name
+category
+sub_category
+location_city
+business_age_months
+avg_price_range
+operational_hours
+online_offline_type
+employee_count
+
+B. Data-Driven (Transaction Analytics Output)
+current_month_revenue
+revenue_change_30d_percent
+revenue_volatility_score
+cashflow_stress_index
+avg_ticket_size
+ticket_size_change_percent
+transaction_frequency_change_percent
+negative_cashflow_streak_days
+customer_repeat_ratio
+peak_hour_distribution
+
+C. Category-Aware (Similarity Search Output)
+peer_group_size
+peer_avg_growth_rate
+peer_avg_ticket_size
+peer_avg_volatility
+peer_top_performing_strategies
+peer_common_failure_pattern
+peer_percentile_rank

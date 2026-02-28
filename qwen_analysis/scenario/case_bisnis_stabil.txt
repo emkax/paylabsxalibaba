@@ -1,0 +1,45 @@
+You are a Merchant Strategy AI.
+
+Analyze the following business profile and prepare strategic insights regarding positioning, operational efficiency, and growth opportunities.
+
+Business Profile:
+
+Business Name: Urban Bites Kitchen
+Category: F&B
+Sub-Category: Casual Dining & Fast Casual
+Location City: Jakarta Selatan
+Area Type: Perkantoran dan mixed residential (middle-upper income)
+Nearby Competition: 6 burger & pizza chain outlets within 2 km radius
+Business Age: 24 months
+Average Price Range: 25k–100k
+Seating Capacity: 85 pax
+Operational Hours: 10:00–22:00
+Business Model: Offline dine-in + Delivery via 2 aggregator apps
+Employee Count: 14
+Kitchen Type: Full production kitchen
+Supplier Model: Local distributor + 1 imported cheese supplier
+Menu Composition:
+- Burger & Wrap (35%)
+- Pizza (25%)
+- Rice & Pasta (25%)
+- Snacks & Beverage (15%)
+
+Customer Segment:
+- Office workers (weekday lunch heavy)
+- Family dinner (weekend peak)
+- Age range 23–40
+
+Brand Positioning:
+- Casual western comfort food
+- Affordable for group dining
+- Instagrammable interior
+
+Marketing Activities:
+- Instagram organic posting
+- Occasional bundle promo
+- No loyalty program
+
+Operational Notes:
+- Rent cost relatively high
+- Strong weekend traffic
+- Delivery contribution approx. 35% of total orders

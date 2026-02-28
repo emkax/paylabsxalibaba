@@ -1,0 +1,42 @@
+Business Name: City Grill Corner
+Category: F&B
+Sub-Category: Casual Dining
+Location City: Surabaya
+Area Type: Secondary commercial area (not main street)
+Nearby Competition: 2 modern cafe chains + 5 small local warung
+Business Age: 30 months
+Average Price Range: 30k–100k
+Seating Capacity: 120 pax
+Operational Hours: 11:00–22:00
+Business Model: Offline dine-in only
+Employee Count: 16
+Kitchen Type: Traditional kitchen layout
+Supplier Model: 2 main suppliers (meat & grocery)
+
+Menu Composition:
+- Burger (20%)
+- Pizza (30%)
+- Rice & Pasta (30%)
+- Snack & Beverage (20%)
+
+Customer Segment:
+- Family dining
+- Small office gatherings
+- Age range 28–45
+
+Brand Positioning:
+- Western grill restaurant
+- Family dining concept
+- Not heavily digital-focused
+
+Marketing Activities:
+- Banner promo
+- No online ads
+- No delivery integration
+- No loyalty system
+
+Operational Notes:
+- High fixed monthly rent
+- Large dining space but low weekday occupancy
+- Inconsistent Google review rating (3.8)
+- Minimal social media engagement
