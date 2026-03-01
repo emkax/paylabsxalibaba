@@ -130,6 +130,9 @@ PRODUCT_PATH=        # Path to sample product CSV
 
 ---
 
+## QWEN analysis 
+
+
 ## 📦 Dependencies
 
 The Python backend uses libraries including:
