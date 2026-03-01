@@ -7,89 +7,140 @@ import os
 import json
 from openai import OpenAI
 from dotenv import load_dotenv
+from pathlib import Path
+from extract_performance_metric import calculate_performance_metrics
+
+BASE_DIR = Path(__file__).parent
 
 load_dotenv()
 
-# ──────────────────────────────────────────────
-# SYSTEM PROMPT
-# ──────────────────────────────────────────────
-
-SYSTEM_PROMPT = """
+BASE_SYSTEM_PROMPT = """
 You are MHSI (Merchant Health & Survival Intelligence), an AI financial analyst embedded inside the Paylabs payment platform.
 
-Your role is to analyze merchant transaction data, detect risk patterns, and provide actionable, evidence-based recommendations to help merchants survive and grow.
-
-## YOUR CAPABILITIES
-- Calculate and explain Merchant Health Score (0–100)
-- Classify risk level: LOW / MEDIUM / HIGH / CRITICAL
-- Estimate 60-day survival probability (%)
-- Identify anomalies in revenue, cashflow, and customer behavior
-- Benchmark merchant against peer group
-- Generate specific, prioritized action plans
+Your role is to analyze merchant transaction data, detect risk patterns, and provide actionable, evidence-based recommendations.
 
 ## STRICT RULES (ANTI-HALLUCINATION)
-1. ONLY make claims that are directly supported by the data provided.
-2. If data is missing or insufficient, explicitly say "Insufficient data for this metric."
-3. Never fabricate numbers, percentages, or trends not present in the input.
+1. ONLY make claims directly supported by the data provided.
+2. If data is missing, explicitly say "Insufficient data for this metric."
+3. Never fabricate numbers, percentages, or trends not in the input.
 4. Always cite which metric or field drives each conclusion.
 5. Probabilities must be derived from actual data patterns, not guesses.
 6. If asked something outside your scope, say so clearly.
 
 ## MEMORY BEHAVIOR
-- You will be given a merchant profile at the start of the session.
-- Remember and reference this profile throughout the entire conversation.
-- When the user asks follow-up questions, always contextualize your answer using their specific business profile and metrics.
-- If the merchant profile is updated, acknowledge the change and adjust your analysis accordingly.
+- You have been given merchant data at session start.
+- Always contextualize answers using the specific merchant's data.
+- If merchant_profile was not provided, skip profile references and rely only on metrics.
+- If metrics are updated mid-session, acknowledge and adjust analysis accordingly.
 
-## RESPONSE FORMAT
-Always structure your responses using these sections (use only sections relevant to the question):
+## COMMAND MODES
 
+### When the user sends exactly "ACTION":
+Respond ONLY with a valid JSON object. No markdown. No explanation. Pure JSON only.
+{
+  "action_plan": {
+    "generated_for": "<business_name or 'Unknown'>",
+    "based_on": {
+      "revenue_change_30d_percent": <value>,
+      "cashflow_stress_index": <value>,
+      "peer_percentile_rank": <value>
+    },
+    "immediate": {
+      "timeframe": "0-7 days",
+      "message": "<one concise paragraph on what to do now and why, grounded in data>",
+      "actions": [
+        {"priority": 1, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"},
+        {"priority": 2, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"},
+        {"priority": 3, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"}
+      ]
+    },
+    "strategic_30_days": {
+      "timeframe": "8-30 days",
+      "message": "<one concise paragraph on medium-term strategy grounded in peer data>",
+      "actions": [
+        {"priority": 1, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"},
+        {"priority": 2, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"}
+      ]
+    },
+    "strategic_90_days": {
+      "timeframe": "31-90 days",
+      "message": "<one concise paragraph on long-term growth trajectory>",
+      "actions": [
+        {"priority": 1, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"},
+        {"priority": 2, "action": "<specific action>", "reason": "<data-backed reason>", "expected_impact": "<realistic outcome>"}
+      ]
+    }
+  }
+}
+
+### When the user sends exactly "OVERVIEW":
+Respond ONLY with a valid JSON object. No markdown. No explanation. Pure JSON only.
+{
+  "overview": {
+    "merchant_profile": {
+      "merchant_id": "<value or null>",
+      "business_name": "<value or null>",
+      "category": "<value or null>",
+      "sub_category": "<value or null>",
+      "location_city": "<value or null>",
+      "business_age_months": <value or null>,
+      "avg_price_range": "<value or null>",
+      "operational_hours": "<value or null>",
+      "online_offline_type": "<value or null>",
+      "employee_count": <value or null>
+    },
+    "health_score": <integer 0-100>,
+    "health_score_label": "<LOW RISK / MEDIUM RISK / HIGH RISK / CRITICAL>",
+    "health_score_reasoning": "<2-3 sentences citing specific metrics that drove this score>",
+    "survival_probability_60d": <integer 0-100>,
+    "survival_trend": "<Improving / Stable / Declining>",
+    "survival_reasoning": "<1-2 sentences explaining the trend>",
+    "key_metrics": {
+      "current_month_revenue": <value>,
+      "revenue_change_30d_percent": <value>,
+      "avg_ticket_size": <value>,
+      "ticket_size_change_percent": <value>,
+      "transaction_frequency_change_percent": <value>,
+      "cashflow_stress_index": <value>,
+      "customer_repeat_ratio": <value>,
+      "revenue_volatility_score": <value>
+    },
+    "peer_comparison": {
+      "peer_group_size": <value>,
+      "peer_avg_growth_rate": <value>,
+      "peer_avg_ticket_size": <value>,
+      "peer_avg_volatility": <value>,
+      "peer_percentile_rank": <value>,
+      "merchant_vs_peer_growth": "<e.g. +15.4% above peer avg>",
+      "merchant_vs_peer_ticket": "<e.g. +Rp 9,000 above peer avg>",
+      "peer_top_performing_strategies": ["<strategy1>", "<strategy2>", "<strategy3>"],
+      "peer_common_failure_pattern": ["<pattern1>", "<pattern2>"]
+    },
+    "top_risks": [
+      {"risk": "<risk description>", "impact": "<potential impact>"},
+      {"risk": "<risk description>", "impact": "<potential impact>"},
+      {"risk": "<risk description>", "impact": "<potential impact>"}
+    ]
+  }
+}
+
+### For all other messages:
+Respond in structured markdown with only the relevant sections:
 ### 🏥 HEALTH SCORE
-[Score /100] — [LOW / MEDIUM / HIGH / CRITICAL risk]
-Brief justification based on specific metrics.
-
 ### 📊 KEY FINDINGS
-- Finding 1 (cite the metric)
-- Finding 2 (cite the metric)
-- Finding 3 (cite the metric)
-
 ### ⚠️ RISK FACTORS
-- Risk 1: [description] → [impact]
-- Risk 2: [description] → [impact]
-
 ### 🎯 RECOMMENDED ACTIONS
-Priority 1 — [Action Title]
-  What: [specific action]
-  Why: [data-backed reason]
-  When: [timeframe]
-  Expected impact: [realistic outcome]
-
-Priority 2 — ...
-
 ### 📈 60-DAY OUTLOOK
-Survival Probability: [X%]
-Trend: [Improving / Stable / Declining]
-Key assumption: [what must happen for this to hold]
-
 ### 💬 ANALYST NOTES
-[Any caveats, data gaps, or context the merchant should know]
 
----
-Keep language professional but accessible. Avoid jargon without explanation. Be direct — merchants need clarity, not corporate speak.
+Keep language professional but accessible. Be direct and data-grounded.
 """
-
-# ──────────────────────────────────────────────
-# CLIENT SETUP
-# ──────────────────────────────────────────────
 
 client = OpenAI(
     api_key=os.getenv("DASHSCOPE_API_KEY"),
     base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
 )
 
-# ──────────────────────────────────────────────
-# MEMORY / CONVERSATION STATE
-# ──────────────────────────────────────────────
 
 class MerchantSession:
     def __init__(self):
@@ -98,109 +149,153 @@ class MerchantSession:
         self.conversation_history: list = []
         self.session_initialized: bool = False
 
-    def initialize(self, merchant_profile: dict, metrics_data: dict):
-        """Load merchant profile and metrics into session memory."""
-        self.merchant_profile = merchant_profile
-        self.metrics_data = metrics_data
+    def initialize(self, merchant_profile: dict = None, metrics_data: dict = None):
+        self.merchant_profile = merchant_profile or {}
+        self.metrics_data = metrics_data or {}
         self.session_initialized = True
 
-        # Inject merchant context as first user message + assistant acknowledgment
-        context_message = self._build_context_message()
         self.conversation_history = [
-            {"role": "user", "content": context_message},
-            {
-                "role": "assistant",
-                "content": (
-                    f"Merchant profile loaded. I now have full context on "
-                    f"**{merchant_profile.get('business_name', 'your business')}** "
-                    f"({merchant_profile.get('category', '')}, {merchant_profile.get('location_city', '')}). "
-                    f"I'll reference this data throughout our session. "
-                    f"What would you like to analyze?"
-                ),
-            },
+            {"role": "user", "content": self._build_context_message()},
+            {"role": "assistant", "content": self._build_ack_message()},
         ]
-        print(f"\n✅ Session initialized for: {merchant_profile.get('business_name')}")
-        print(f"   Category : {merchant_profile.get('category')} — {merchant_profile.get('sub_category')}")
-        print(f"   Location : {merchant_profile.get('location_city')}")
-        print(f"   Peer Rank: Top {100 - metrics_data.get('peer_comparison', {}).get('peer_percentile_rank', 0)}%\n")
+
+        biz_name = self.merchant_profile.get("business_name", "(no profile provided)")
+        peer_rank = self.metrics_data.get("peer_comparison", {}).get("peer_percentile_rank", "N/A")
+
+        print(f"\n{'='*60}")
+        print(f"  Session initialized")
+        print(f"  Merchant  : {biz_name}")
+        if self.merchant_profile:
+            print(f"  Category  : {self.merchant_profile.get('category')} - {self.merchant_profile.get('sub_category')}")
+            print(f"  Location  : {self.merchant_profile.get('location_city')}")
+        print(f"  Peer Rank : {peer_rank}th percentile")
+        print(f"{'='*60}\n")
 
     def _build_context_message(self) -> str:
-        return f"""
-Please load and remember the following merchant profile and performance data for this entire session.
+        parts = ["Please load and remember the following data for this entire session.\n"]
 
-## MERCHANT PROFILE
-{json.dumps(self.merchant_profile, indent=2)}
+        if self.merchant_profile:
+            parts.append("## MERCHANT PROFILE")
+            parts.append(json.dumps(self.merchant_profile, indent=2))
+        else:
+            parts.append("## MERCHANT PROFILE")
+            parts.append(
+                "(No merchant profile provided. "
+                "For OVERVIEW, return null for all merchant_profile fields. "
+                "Do not invent profile data.)"
+            )
 
-## PERFORMANCE METRICS & PEER COMPARISON
-{json.dumps(self.metrics_data, indent=2)}
+        if self.metrics_data:
+            parts.append("\n## PERFORMANCE METRICS & PEER COMPARISON")
+            parts.append(json.dumps(self.metrics_data, indent=2))
 
-Acknowledge that you have loaded this data and are ready to analyze.
-""".strip()
+        parts.append("\nAcknowledge you have loaded this data and are ready to analyze.")
+        return "\n".join(parts)
 
-    def chat(self, user_message: str) -> str:
-        """Send a message and get a response, maintaining conversation history."""
+    def _build_ack_message(self) -> str:
+        if self.merchant_profile:
+            biz = self.merchant_profile.get("business_name", "your business")
+            return (
+                f"Data loaded. Full context on {biz} "
+                f"({self.merchant_profile.get('category', '')}, "
+                f"{self.merchant_profile.get('location_city', '')}) is ready. "
+                f"Use ACTION, OVERVIEW, or ask any question."
+            )
+        return (
+            "Performance metrics and peer comparison data loaded. "
+            "No merchant profile provided - I will reference metrics only. "
+            "Use ACTION, OVERVIEW, or ask any question."
+        )
+
+    def chat(self, user_message: str):
         if not self.session_initialized:
-            return "⚠️ No merchant data loaded. Please call session.initialize() first."
+            return "No data loaded. Please call session.initialize() first."
 
         self.conversation_history.append({"role": "user", "content": user_message})
 
         response = client.chat.completions.create(
             model="qwen-plus",
-            messages=[{"role": "system", "content": SYSTEM_PROMPT}]
+            messages=[{"role": "system", "content": BASE_SYSTEM_PROMPT}]
             + self.conversation_history,
-            temperature=0.3,   # lower = more grounded, less hallucination
-            max_tokens=2000,
+            temperature=0.2,
+            max_tokens=2500,
         )
 
-        assistant_reply = response.choices[0].message.content
-        self.conversation_history.append(
-            {"role": "assistant", "content": assistant_reply}
-        )
-        return assistant_reply
+        raw_reply = response.choices[0].message.content
+        self.conversation_history.append({"role": "assistant", "content": raw_reply})
+
+        cmd = user_message.strip().upper()
+        if cmd in ("ACTION", "OVERVIEW"):
+            try:
+                clean = raw_reply.strip()
+                if clean.startswith("```"):
+                    lines = clean.split("\n")
+                    clean = "\n".join(lines[1:])
+                    clean = clean.rsplit("```", 1)[0]
+                return json.loads(clean.strip())
+            except json.JSONDecodeError:
+                return raw_reply
+
+        return raw_reply
 
     def reset_conversation(self):
-        """Keep merchant memory but clear conversation thread."""
         if self.session_initialized:
-            context_message = self._build_context_message()
             self.conversation_history = [
-                {"role": "user", "content": context_message},
-                {
-                    "role": "assistant",
-                    "content": "Conversation reset. Merchant profile is still loaded. How can I help?",
-                },
+                {"role": "user", "content": self._build_context_message()},
+                {"role": "assistant", "content": "Conversation reset. Merchant data still loaded. How can I help?"},
             ]
-        print("🔄 Conversation reset. Merchant profile retained.")
+        print("Conversation reset. Merchant data retained.\n")
 
     def update_metrics(self, new_metrics: dict):
-        """Update metrics mid-session (e.g. after new transaction data)."""
         self.metrics_data.update(new_metrics)
-        update_msg = f"Merchant metrics have been updated:\n{json.dumps(new_metrics, indent=2)}\nPlease factor in these changes going forward."
+        update_msg = (
+            f"Merchant metrics have been updated:\n"
+            f"{json.dumps(new_metrics, indent=2)}\n"
+            f"Please factor in these changes going forward."
+        )
         self.conversation_history.append({"role": "user", "content": update_msg})
         response = client.chat.completions.create(
             model="qwen-plus",
-            messages=[{"role": "system", "content": SYSTEM_PROMPT}]
+            messages=[{"role": "system", "content": BASE_SYSTEM_PROMPT}]
             + self.conversation_history,
-            temperature=0.3,
+            temperature=0.2,
             max_tokens=500,
         )
         ack = response.choices[0].message.content
         self.conversation_history.append({"role": "assistant", "content": ack})
-        print(f"📥 Metrics updated. AI acknowledged:\n{ack}\n")
+        print(f"Metrics updated.\n{ack}\n")
+
+    def load_session(self, filepath="session_memory.json"):
+        if not os.path.exists(filepath):
+            return False
+
+        try:
+            with open(filepath, "r") as f:
+                data = json.load(f)
+        except (json.JSONDecodeError, ValueError):
+            print("Session file corrupted or empty. Starting fresh.")
+            return False
+
+        self.merchant_profile = data.get("merchant_profile", {})
+        self.metrics_data = data.get("metrics_data", {})
+        self.conversation_history = data.get("conversation_history", [])
+        self.session_initialized = True
+        return True
+
+    def save_session(self, filepath="session_memory.json"):
+        data = {
+            "merchant_profile": self.merchant_profile,
+            "metrics_data": self.metrics_data,
+            "conversation_history": self.conversation_history
+        }
+        with open(filepath, "w") as f:
+            json.dump(data, f)
 
 
-# ──────────────────────────────────────────────
-# HELPER: LOAD JSON DATA
-# ──────────────────────────────────────────────
-
-def load_merchant_data(json_path: str) -> tuple[dict, dict]:
-    """
-    Load merchant data from a JSON file.
-    Returns (merchant_profile, performance_metrics_and_peers).
-    """
+def load_merchant_data(json_path: str) -> tuple:
     with open(json_path, "r") as f:
         data = json.load(f)
-
-    profile = data.get("merchant_profile", {})
+    profile = data.get("merchant_profile") or None
     metrics = {
         "performance_metrics": data.get("performance_metrics", {}),
         "peer_comparison": data.get("peer_comparison", {}),
@@ -208,21 +303,20 @@ def load_merchant_data(json_path: str) -> tuple[dict, dict]:
     return profile, metrics
 
 
-# ──────────────────────────────────────────────
-# INTERACTIVE CLI
-# ──────────────────────────────────────────────
-
 def run_interactive_cli(json_path: str):
     print("\n" + "=" * 60)
     print("  Paylabs AI Merchant Health & Survival Intelligence")
     print("=" * 60)
 
-    profile, metrics = load_merchant_data(json_path)
-
     session = MerchantSession()
-    session.initialize(profile, metrics)
 
-    print("Commands: 'reset' | 'quit' | or type any question\n")
+    # Try to load saved session
+    if not session.load_session():
+        # If no saved session exists, load fresh data
+        profile, metrics = load_merchant_data(json_path)
+        session.initialize(merchant_profile=profile, metrics_data=metrics)
+
+    print("Commands: ACTION | OVERVIEW | reset | quit | or ask anything\n")
 
     while True:
         try:
@@ -233,58 +327,59 @@ def run_interactive_cli(json_path: str):
 
         if not user_input:
             continue
-
         if user_input.lower() == "quit":
             print("Goodbye.")
             break
-
         if user_input.lower() == "reset":
             session.reset_conversation()
             continue
+        if user_input.lower() == "update":
 
-        print("\nAI Analyst: ", end="", flush=True)
+            continue
+
         reply = session.chat(user_input)
-        print(reply)
+        session.save_session()
+
+        print("\nAI Analyst:")
+        if isinstance(reply, dict):
+            print(json.dumps(reply, indent=2))
+        else:
+            print(reply)
         print()
 
+        
 
-# ──────────────────────────────────────────────
-# EXAMPLE: PROGRAMMATIC USAGE
-# ──────────────────────────────────────────────
+
 
 def run_demo(json_path: str):
-    """Run a preset demo analysis."""
     profile, metrics = load_merchant_data(json_path)
-
     session = MerchantSession()
-    session.initialize(profile, metrics)
+    session.initialize(merchant_profile=profile, metrics_data=metrics)
 
-    demo_questions = [
-        "Give me a full health assessment of this merchant.",
-        "What are the top 3 risks I should watch for in the next 60 days?",
-        "Based on what top peers are doing, what strategies should I adopt?",
-        "What is my survival probability and what can improve it?",
+    questions = [
+        "OVERVIEW",
+        "ACTION",
+        "What are the top 3 risks I should watch in the next 60 days?",
     ]
 
-    for q in demo_questions:
+    for q in questions:
         print(f"\n{'─'*60}")
-        print(f"📌 {q}")
+        print(f">>> {q}")
         print(f"{'─'*60}")
         reply = session.chat(q)
-        print(reply)
+        if isinstance(reply, dict):
+            print(json.dumps(reply, indent=2))
+        else:
+            print(reply)
 
-
-# ──────────────────────────────────────────────
-# ENTRY POINT
-# ──────────────────────────────────────────────
 
 if __name__ == "__main__":
     import sys
 
-    json_path = sys.argv[1] if len(sys.argv) > 1 else "high_growth.json"
+    json_path = sys.argv[1] if len(sys.argv) > 1 else "./case1.json"
     mode = sys.argv[2] if len(sys.argv) > 2 else "interactive"
 
     if mode == "demo":
-        run_demo(json_path)
+        run_demo(BASE_DIR / json_path)
     else:
-        run_interactive_cli(json_path)
+        run_interactive_cli(BASE_DIR / json_path)
