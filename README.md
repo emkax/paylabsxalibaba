@@ -142,21 +142,16 @@ The Python backend uses libraries including:
 
 ---
 
-## ⚠ Notes & Gotchas
+## ⚠ Notes
 
-- `ec.py` (Direct Debit) is considered incomplete or non-functional. :contentReference[oaicite:14]{index=14}  
-- Some API endpoints have typo inconsistencies in their documentation. :contentReference[oaicite:15]{index=15}  
-- Private keys are excluded from the repository for security. :contentReference[oaicite:16]{index=16}
+- `ec.py` (Direct Debit) is considered incomplete or non-functional.
+- Some API endpoints have typo inconsistencies in their documentation.
+- Private keys are excluded from the repository for security.
 
 ---
 
 ## 🧪 Testing
 
 - `seeding.py` can generate hundreds of synthetic test transactions.  
-- Bulk testing can be used to stress test gateway integration during hackathons. :contentReference[oaicite:17]{index=17}
 
 ---
-
-## 🧾 License
-
-License not specified (no LICENSE file). Default GitHub public repository terms apply unless otherwise noted.
