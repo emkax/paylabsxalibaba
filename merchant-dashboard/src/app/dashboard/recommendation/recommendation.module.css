@@ -1,0 +1,396 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--border-hover);
+}
+
+/* Progress Card */
+.progressCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  min-width: 200px;
+  box-shadow: var(--shadow-sm);
+}
+
+.progressHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.progressIcon {
+  color: var(--success);
+}
+
+.progressLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.progressValue {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 10px;
+}
+
+.progressBar {
+  height: 8px;
+  background: var(--surface);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 4px;
+  transition: width var(--transition-normal);
+}
+
+/* Section */
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sectionIcon {
+  color: var(--primary);
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* Causes Grid */
+.causesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.causeCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  border-left-width: 4px;
+}
+
+.causeCard.severityHigh {
+  border-left-color: var(--error);
+}
+
+.causeCard.severityMedium {
+  border-left-color: var(--warning);
+}
+
+.causeCard.severityLow {
+  border-left-color: var(--info);
+}
+
+.causeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.causeSeverity {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--border-hover);
+}
+
+.causeTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 8px;
+}
+
+.causeDescription {
+  font-size: 13px;
+  color: var(--border-hover);
+  line-height: 1.6;
+}
+
+/* Impact Grid */
+.impactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.impactCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.impactIcon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.impactValue {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--success);
+  margin-bottom: 6px;
+}
+
+.impactLabel {
+  font-size: 13px;
+  color: var(--border-hover);
+}
+
+/* Actions List */
+.actionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actionCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.actionCard:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.actionContent {
+  padding: 20px;
+}
+
+.actionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.actionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.priorityBadge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.priorityBadge.priorityHigh {
+  background: var(--error-light);
+  color: var(--error);
+}
+
+.priorityBadge.priorityMedium {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.priorityBadge.priorityLow {
+  background: var(--info-light);
+  color: var(--info);
+}
+
+.actionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.toggleBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--foreground);
+}
+
+.toggleBtn:hover {
+  background: var(--border);
+  border-color: var(--border-hover);
+}
+
+.toggleBtn.implemented {
+  background: var(--success-light);
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.actionDescription {
+  font-size: 14px;
+  color: var(--border-hover);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.actionImpact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.actionImpact .impactLabel {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--border-hover);
+}
+
+.actionImpact .impactValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--success);
+}
+
+/* Loading states */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.skeletonSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.skeletonTitle {
+  height: 28px;
+  width: 200px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.skeletonCauses {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.skeletonCauses > div {
+  height: 150px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.skeletonActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonActions > div {
+  height: 120px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+  }
+
+  .progressCard {
+    width: 100%;
+  }
+
+  .causesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .impactGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .actionHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actionTitleRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .toggleBtn {
+    justify-content: center;
+  }
+}

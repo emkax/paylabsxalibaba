@@ -1,0 +1,318 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--border-hover);
+}
+
+/* Main Grid - Health Score + Survival */
+.mainGrid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+/* Health Score Gauge */
+.healthSection {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.gaugeContainer {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.gauge {
+  width: 100%;
+  height: 100%;
+}
+
+.gaugeBackground {
+  stroke: var(--surface);
+}
+
+.gaugeStroke {
+  transition: stroke-dashoffset var(--transition-slow);
+}
+
+.healthHigh {
+  stroke: var(--health-high);
+}
+
+.healthMedium {
+  stroke: var(--health-medium);
+}
+
+.healthLow {
+  stroke: var(--health-low);
+}
+
+.gaugeContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.gaugeValue {
+  display: block;
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.gaugeLabel {
+  display: block;
+  font-size: 13px;
+  color: var(--border-hover);
+  margin-top: 4px;
+}
+
+/* Survival Probability */
+.survivalSection {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.survivalHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.survivalIcon {
+  color: var(--primary);
+}
+
+.survivalLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.survivalValue {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 16px;
+}
+
+.survivalBar {
+  height: 12px;
+  background: var(--surface);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.survivalBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%);
+  border-radius: 6px;
+  transition: width var(--transition-slow);
+}
+
+.survivalHint {
+  font-size: 13px;
+  color: var(--border-hover);
+}
+
+/* Risk Badge */
+.riskBadge {
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.badgeSuccess {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.badgeWarning {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.badgeError {
+  background: var(--error-light);
+  color: var(--error);
+}
+
+/* KPI Grid */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpiCard {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+}
+
+.kpiCard:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-hover);
+}
+
+.kpiHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.kpiTitle {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--border-hover);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpiIcon {
+  color: var(--primary);
+}
+
+.kpiValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--foreground);
+  margin-bottom: 8px;
+}
+
+.kpiChange {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.kpiChangePositive {
+  color: var(--success);
+}
+
+.kpiChangeNegative {
+  color: var(--error);
+}
+
+/* Footer */
+.footer {
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.lastUpdated {
+  font-size: 12px;
+  color: var(--border-hover);
+}
+
+/* Loading states */
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.skeletonGauge {
+  height: 200px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.skeletonCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.skeletonKpi {
+  height: 120px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+/* Error state */
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--error);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .kpiGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gaugeContainer {
+    width: 150px;
+    height: 150px;
+  }
+
+  .gaugeValue {
+    font-size: 32px;
+  }
+
+  .survivalValue {
+    font-size: 36px;
+  }
+}
