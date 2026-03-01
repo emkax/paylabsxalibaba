@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Backend API (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=mysql+pymysql://root:rootpassword@mysql:3306/paylabs_merchant
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+      - PAYLABS_MERCHANT_ID=${PAYLABS_MERCHANT_ID:-010614}
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - ./backend:/app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - paylabs-network
+
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: paylabs_merchant
+      MYSQL_USER: paylabs
+      MYSQL_PASSWORD: paylabspassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - paylabs-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - paylabs-network
+
+  # Frontend (Next.js) - Optional, can run separately
+  frontend:
+    build:
+      context: ./merchant-dashboard
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./merchant-dashboard:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - paylabs-network
+
+networks:
+  paylabs-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:

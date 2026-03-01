@@ -2,8 +2,10 @@
 private_key.pem
 public_key.pem
 
-# Ignore environment configuration file
+# Ignore environment configuration files
 .env
+.env.local
+.env.*.local
 
 # Ignore node_modules
 node_modules/
@@ -16,3 +18,32 @@ build/
 # Ignore IDE settings
 .vscode/
 .idea/
+
+# Ignore Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+EGG-INFO/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Ignore logs
+*.log
+
+# Ignore Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/

@@ -1,0 +1,26 @@
+# FastAPI & Server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database
+sqlalchemy==2.0.25
+pymysql==1.1.0
+redis==5.0.1
+
+# PayLabs API Client
+requests==2.31.0
+cryptography==42.0.0
+python-dotenv==1.0.0
+
+# Alibaba Cloud AI
+dashscope==1.14.0  # Qwen (Tongyi Qianwen) SDK
+
+# Analytics & ML
+pandas==2.1.4
+numpy==1.26.3
+scikit-learn==1.4.0
+
+# Utilities
+pydantic==2.5.3
+pydantic-settings==2.1.0
