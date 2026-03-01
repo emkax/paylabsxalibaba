@@ -3,6 +3,7 @@ Alibaba Cloud AI Service Integration
 
 This module provides integration with Alibaba Cloud's Qwen (Tongyi Qianwen) API
 for generating natural language insights and recommendations for merchants.
+Uses OpenAI-compatible API endpoint for broader compatibility.
 """
 import os
 import json
@@ -11,28 +12,45 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Try to import dashscope (Alibaba Cloud Qwen SDK)
+# Try to import OpenAI client (works with Alibaba DashScope compatible endpoint)
 try:
-    import dashscope
-    from dashscope import Generation
-    DASHSCOPE_AVAILABLE = True
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
 except ImportError:
-    DASHSCOPE_AVAILABLE = False
+    OPENAI_AVAILABLE = False
 
 
 class QwenAIService:
     """
     Service for interacting with Alibaba Cloud Qwen AI API
+    Uses OpenAI-compatible endpoint: https://dashscope-intl.aliyuncs.com/compatible-mode/v1
     """
 
     def __init__(self, api_key: str = None):
         self.api_key = api_key or os.getenv("DASHSCOPE_API_KEY")
-        self.model = os.getenv("QWEN_MODEL", "qwen-max")
+        self.model = os.getenv("QWEN_MODEL", "qwen3.5-flash")
+        self.base_url = os.getenv(
+            "DASHSCOPE_BASE_URL",
+            "https://dashscope-intl.aliyuncs.com/compatible-mode/v1"
+        )
 
-        if DASHSCOPE_AVAILABLE and self.api_key:
-            dashscope.api_key = self.api_key
+        if OPENAI_AVAILABLE and self.api_key:
+            try:
+                import httpx
+                # Create client without proxy to avoid "proxies" parameter issues
+                self.client = OpenAI(
+                    api_key=self.api_key,
+                    base_url=self.base_url,
+                    timeout=60.0,
+                    max_retries=2,
+                    http_client=httpx.Client(http2=False)
+                )
+            except Exception as e:
+                self.client = None
+                print(f"Warning: Failed to initialize OpenAI client: {str(e)}. AI features will use fallback responses.")
         else:
-            print("Warning: Dashscope not configured. AI features will use fallback responses.")
+            self.client = None
+            print("Warning: OpenAI client not configured. AI features will use fallback responses.")
 
     def generate_merchant_insights(
         self,
@@ -53,19 +71,16 @@ class QwenAIService:
         # Create prompt for Qwen
         prompt = self._build_analysis_prompt(merchant_data)
 
-        if DASHSCOPE_AVAILABLE and self.api_key:
+        if self.client:
             try:
-                response = Generation.call(
+                response = self.client.chat.completions.create(
                     model=self.model,
-                    prompt=prompt,
+                    messages=[{"role": "user", "content": prompt}],
                     temperature=0.7,
                     max_tokens=1000
                 )
 
-                if response.status_code == 200:
-                    return self._parse_ai_response(response.output.text)
-                else:
-                    print(f"Qwen API error: {response.code} - {response.message}")
+                return self._parse_ai_response(response.choices[0].message.content)
             except Exception as e:
                 print(f"Qwen API exception: {str(e)}")
 

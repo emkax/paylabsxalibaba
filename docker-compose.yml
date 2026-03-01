@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Backend API (FastAPI)
+  # Backend API (FastAPI) - Development mode
   backend:
     build:
       context: ./backend
@@ -12,8 +12,8 @@ services:
       - DATABASE_URL=mysql+pymysql://root:rootpassword@mysql:3306/paylabs_merchant
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
-      - PAYLABS_MERCHANT_ID=${PAYLABS_MERCHANT_ID:-010614}
+      - DASHSCOPE_API_KEY=sk-3bc435f350b84e10b0fff10f75ce9bd0
+      - PAYLABS_MERCHANT_ID=010614
       - FRONTEND_URL=http://localhost:3000
     volumes:
       - ./backend:/app
@@ -55,7 +55,7 @@ services:
     networks:
       - paylabs-network
 
-  # Frontend (Next.js) - Optional, can run separately
+  # Frontend (Next.js) - Development mode
   frontend:
     build:
       context: ./merchant-dashboard
@@ -63,10 +63,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://backend:8000
     volumes:
       - ./merchant-dashboard:/app
       - /app/node_modules
+      - /app/.next
     depends_on:
       - backend
     networks:

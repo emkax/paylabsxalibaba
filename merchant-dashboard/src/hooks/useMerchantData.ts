@@ -11,7 +11,7 @@ import { merchantApi, aiApi, type SimulationInput } from '@/lib/api-client';
 // Query keys
 export const merchantQueryKeys = {
   all: ['merchant'] as const,
-  overview: (merchantId: string) => ['merchant', merchantId, 'overview'] as const,
+  overview: (merchantId: string, days: number = 30) => ['merchant', merchantId, 'overview', days] as const,
   performance: (merchantId: string, days: number) => ['merchant', merchantId, 'performance', days] as const,
   cashflow: (merchantId: string) => ['merchant', merchantId, 'cashflow'] as const,
   peer: (merchantId: string) => ['merchant', merchantId, 'peer'] as const,
@@ -163,7 +163,7 @@ export function useMarkRecommendationImplemented() {
     onSuccess: (data, recommendationId) => {
       // Invalidate recommendations to refresh list
       queryClient.invalidateQueries({
-        queryKey: aiQueryKeys.recommendations('MERCHANT001'), // Adjust merchant ID as needed
+        queryKey: aiQueryKeys.recommendations('MERCHANT001', 'pending'), // Adjust merchant ID as needed
       });
     },
   });

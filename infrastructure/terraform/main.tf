@@ -85,6 +85,27 @@ resource "alicloud_security_group_rule" "ecs_http" {
   cidr_ip           = "0.0.0.0/0"
   policy            = "accept"
   type              = "ingress"
+  description       = "Backend API HTTP"
+}
+
+resource "alicloud_security_group_rule" "ecs_https" {
+  security_group_id = alicloud_security_group.ecs.id
+  ip_protocol       = "tcp"
+  port_range        = "443/443"
+  cidr_ip           = "0.0.0.0/0"
+  policy            = "accept"
+  type              = "ingress"
+  description       = "Frontend HTTPS"
+}
+
+resource "alicloud_security_group_rule" "ecs_frontend" {
+  security_group_id = alicloud_security_group.ecs.id
+  ip_protocol       = "tcp"
+  port_range        = "3000/3000"
+  cidr_ip           = "0.0.0.0/0"
+  policy            = "accept"
+  type              = "ingress"
+  description       = "Frontend Next.js"
 }
 
 resource "alicloud_security_group_rule" "ecs_ssh" {
@@ -215,4 +236,14 @@ output "redis_connection_string" {
 output "backend_api_url" {
   description = "Backend API URL"
   value       = "http://${alicloud_eip.backend.ip_address}:8000"
+}
+
+output "frontend_url" {
+  description = "Frontend application URL"
+  value       = "http://${alicloud_eip.backend.ip_address}:3000"
+}
+
+output "ecs_instance_id" {
+  description = "ECS instance ID"
+  value       = alicloud_instance.backend.id
 }

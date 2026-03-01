@@ -7,18 +7,20 @@ USE paylabs_merchant;
 CREATE TABLE IF NOT EXISTS transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     transaction_id VARCHAR(64) UNIQUE NOT NULL,
-    merchant_id VARCHAR(32) NOT NULL INDEX,
+    merchant_id VARCHAR(32) NOT NULL,
     amount DECIMAL(15, 2) NOT NULL,
     currency VARCHAR(3) DEFAULT 'IDR',
     payment_method VARCHAR(32),
     transaction_type VARCHAR(32),
-    status VARCHAR(32) INDEX,
+    status VARCHAR(32),
     is_anomaly BOOLEAN DEFAULT FALSE,
     anomaly_score DECIMAL(5, 4),
-    transaction_time DATETIME INDEX,
+    transaction_time DATETIME,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     raw_data JSON,
+    INDEX idx_merchant (merchant_id),
+    INDEX idx_status (status),
     INDEX idx_merchant_time (merchant_id, transaction_time),
     INDEX idx_status_time (status, transaction_time)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -26,7 +28,7 @@ CREATE TABLE IF NOT EXISTS transactions (
 -- Merchant health snapshots table
 CREATE TABLE IF NOT EXISTS merchant_health_snapshots (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    merchant_id VARCHAR(32) NOT NULL INDEX,
+    merchant_id VARCHAR(32) NOT NULL,
     snapshot_date DATETIME NOT NULL,
     health_score DECIMAL(5, 2) NOT NULL,
     survival_probability DECIMAL(5, 2) NOT NULL,
@@ -45,7 +47,7 @@ CREATE TABLE IF NOT EXISTS merchant_health_snapshots (
 -- AI recommendations table
 CREATE TABLE IF NOT EXISTS ai_recommendations (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    merchant_id VARCHAR(32) NOT NULL INDEX,
+    merchant_id VARCHAR(32) NOT NULL,
     recommendation_type VARCHAR(32),
     title VARCHAR(256) NOT NULL,
     description TEXT,
@@ -57,14 +59,15 @@ CREATE TABLE IF NOT EXISTS ai_recommendations (
     implemented_at DATETIME,
     model_used VARCHAR(64),
     confidence_score DECIMAL(4, 3),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP INDEX,
-    INDEX idx_merchant_status (merchant_id, status)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_merchant_status (merchant_id, status),
+    INDEX idx_created_at (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Simulation results table
 CREATE TABLE IF NOT EXISTS simulation_results (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    merchant_id VARCHAR(32) NOT NULL INDEX,
+    merchant_id VARCHAR(32) NOT NULL,
     discount_percentage DECIMAL(5, 2) DEFAULT 0,
     cost_reduction_percentage DECIMAL(5, 2) DEFAULT 0,
     marketing_boost_percentage DECIMAL(5, 2) DEFAULT 0,
@@ -72,7 +75,8 @@ CREATE TABLE IF NOT EXISTS simulation_results (
     forecasted_revenue DECIMAL(15, 2),
     updated_health_score DECIMAL(5, 2),
     updated_survival_probability DECIMAL(5, 2),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_merchant (merchant_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Insert sample data for testing (optional)

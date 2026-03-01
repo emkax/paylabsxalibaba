@@ -12,7 +12,7 @@ load_dotenv()
 # Database configuration
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "mysql+pymysql://root:password@localhost:3306/paylabs_merchant"
+    "mysql+pymysql://root:rootpassword@mysql:3306/paylabs_merchant"  # MySQL via Docker
 )
 
 # Redis configuration

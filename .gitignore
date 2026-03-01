@@ -47,3 +47,7 @@ Thumbs.db
 *.tfstate
 *.tfstate.backup
 .terraform/
+
+# Ignore local development files
+CLAUDE.md
+context/
